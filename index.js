@@ -21,7 +21,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to database"))
   .catch((err) => console.log(err));
-let id = 0;
 
 const urlSchema = new mongoose.Schema({
   originalUrl: String,
@@ -48,8 +47,8 @@ app.post("/api/shorturl", async (req, res) => {
         console.log(err);
         return res.json({ error: "invalid url" });
       }
-      id++;
-      const urlObj = new Url({ originalUrl: url, shortUrl: id });
+      const urlID = await Url.countDocuments();
+      const urlObj = new Url({ originalUrl: url, shortUrl: urlID });
       await urlObj
         .save()
         .then((data) => {
